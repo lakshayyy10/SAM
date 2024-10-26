@@ -1,0 +1,67 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f8fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.test-container {
+    margin-top: 30px;
+}
+
+.test-container h2 {
+    font-size: 20px;
+    color: #2b4fff;
+}
+
+.test-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.test-btn {
+    width: 150px;
+    height: 50px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.test-btn:hover {
+    background-color: #0056b3;
+}
+
+#dry-analysis { background-color: #ffcc00; }
+#wet-analysis { background-color: #3399ff; }
+#spectroscopic-test { background-color: #cc33ff; }
+#chemical-analysis { background-color: #ff66b2; }
+#thermal-analysis { background-color: #ff6666; }
+
+.status {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+}
