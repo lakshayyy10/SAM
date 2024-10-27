@@ -12,16 +12,16 @@
         <div class="test-container">
             <h2>Choose a Test</h2>
             <div class="test-row">
-                <button class="btn dryanalysis" onclick="window.location.href='gas.html'">⚡ Dry Analysis</button>
+                <!-- Gas Sensor Analysis button corrected -->
+                <button class="test-btn" id="dry-analysis" onclick="window.location.href='{{ url_for('gas_test') }}'">Gas sensor Analysis</button>
 
-                <button class="test-btn" id="wet-analysis">Wet Analysis</button>
-                <button class="test-btn" id="spectroscopic-test">Spectroscopic Test</button>
-                <button class="test-btn" id="chemical-analysis">Chemical Analysis</button>
-                <button class="test-btn" id="thermal-analysis">Thermal Analysis</button>
+                <button class="test-btn" id="wet-analysis">Ph test</button>
+                <button class="test-btn" id="spectroscopic-test">Humidity sensor Analysis</button>
+                <button class="test-btn" id="chemical-analysis">Texture and Particle Size Test</button>
+                <button class="test-btn" id="thermal-analysis">Spectroscopy</button>
             </div>
             <div class="status" id="status">Status: Awaiting Test Selection...</div>
         </div>
     </div>
-
 </body>
 </html>

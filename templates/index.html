@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soil Analysis Module</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
     <div class="module-container">
@@ -12,17 +12,17 @@
             <h1>Soil Analysis Module</h1>
             <div class="logo">
                 <span>SAM</span>
-                <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="SAM Logo"> <!-- Updated path for logo -->
+                <img src="logo.jpg" alt="SAM Logo">
             </div>
         </div>
         <div class="status">
             <span>Status: Separating soil...</span>
         </div>
         <div class="button-container">
-            <a href="{{ url_for('experiment') }}" class="btn experiment">⚡ Experiment</a> <!-- Updated link for experiment -->
-            <a href="{{ url_for('results') }}" class="btn wetanalysis">💧 Results</a> <!-- Updated link for results -->
-            <a href="{{ url_for('database') }}" class="btn database">🔍 Database</a> <!-- Update link to database if you have a route -->
-            <a href="{{ url_for('abort') }}" class="btn abort">🛑 Abort Test</a> <!-- Update link to abort if you have a route -->
+            <a href="{{ url_for('experiment') }}" class="btn experiment">⚡ Experiment</a>
+            <a href="{{ url_for('results') }}" class="btn wetanalysis">💧 Results</a>
+            <!-- <a href="{{ url_for('database') }}" class="btn database">🔍 Database</a> --> <!-- This should be commented out -->
+            <a href="abort.html" class="btn abort">🛑 Abort Test</a>
         </div>
     </div>
 </body>
