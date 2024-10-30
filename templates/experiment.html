@@ -24,11 +24,13 @@
             <div class="test-row">
                 <!-- Gas Sensor Analysis button corrected -->
                 <button class="test-btn" id="dry-analysis" onclick="window.location.href='{{ url_for('gas_test') }}'">Gas sensor Analysis</button>
-
-                <button class="test-btn" id="wet-analysis">Ph test</button>
                 <button class="test-btn" id="spectroscopic-test" onclick="window.location.href='{{url_for('humidity') }}'">Humidity sensor Analysis</button>
-                  <button class="test-btn" id="chemical-analysis">Texture and Particle Size Test</button>
-                <button class="test-btn" id="thermal-analysis">Spectroscopy</button>
+                 <button class="test-btn" id="wet-analysis">Ph test</button>
+                <button class="test-btn" id="chemical-analysis">Texture and Particle Size Test</button>
+                <button class="test-btn" id="Catalase">Catalase Test</button>
+                <button class="test-btn" id="Carbonate">Carbonate Test</button>
+                <button class="test-btn" id="thermal-analysis">LED Spectroscopy</button>
+
             </div>
             <div class="status" id="status">Status: Awaiting Test Selection...</div>
         </div>

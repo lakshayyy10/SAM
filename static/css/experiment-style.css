@@ -59,6 +59,8 @@ h1 {
 #spectroscopic-test { background-color: #cc33ff; }
 #chemical-analysis { background-color: #ff66b2; }
 #thermal-analysis { background-color: #ff6666; }
+#Catalase { background-color: #504992; }
+#Carbonate { background-color: #aa5db4; }
 
 .status {
     margin-top: 20px;
