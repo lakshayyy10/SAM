@@ -8,11 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -22,19 +18,20 @@
         <div class="test-container">
             <h2>Choose a Test</h2>
             <div class="test-row">
-                <!-- Gas Sensor Analysis button corrected -->
-                <button class="test-btn" id="dry-analysis" onclick="window.location.href='{{ url_for('gas_test') }}'">Gas sensor Analysis</button>
-                <button class="test-btn" id="spectroscopic-test" onclick="window.location.href='{{url_for('humidity') }}'">Humidity sensor Analysis</button>
-                 <button class="test-btn" id="wet-analysis">Ph test</button>
-                <button class="test-btn" id="chemical-analysis">Texture and Particle Size Test</button>
-                <button class="test-btn" id="Catalase">Catalase Test</button>
-                <button class="test-btn" id="Carbonate">Carbonate Test</button>
-                <button class="test-btn" id="thermal-analysis">LED Spectroscopy</button>
-
+                <!-- Redirect to gas test specifically -->
+                <button class="test-btn" onclick="window.location.href='{{ url_for('gas_test') }}'">Gas Sensor Analysis</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('humidity') }}'">Humidity Sensor Analysis</button>
+                
+                <!-- Link the following tests to video.html -->
+                <button class="test-btn" onclick="window.location.href='{{ url_for('video') }}'">pH Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('video') }}'">Texture and Particle Size Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('video') }}'">Catalase Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('video') }}'">Carbonate Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('video') }}'">LED Spectroscopy</button>
             </div>
             <div class="status" id="status">Status: Awaiting Test Selection...</div>
         </div>
     </div>
 </body>
 </html>
->
+
