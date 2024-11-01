@@ -4,6 +4,7 @@ from flask import Flask, jsonify, render_template, Response
 from datetime import datetime
 import os
 import time
+import Adafruit_DHT
 
 try:
     import RPi.GPIO as GPIO
@@ -28,13 +29,17 @@ cam_2 = cv2.VideoCapture(1)  # Camera 2 for live feed
 
 # GPIO Setup
 GPIO.setmode(GPIO.BCM)
+GAS_SENSOR_PIN = 3 # GPIO pin connected to MQ4 sensor's data output
+DHT_SENSOR = Adafruit_DHT.DHT11
+DHT_PIN = 4  # GPIO pin connected to DHT11 data pin
 STEPPER_DIR_PIN = 2
 STEPPER_STEP_PIN = 5
-SERVO_PINS = [17, 27, 22, 10, 9]  # Define pins for each servo
+SERVO_PINS = [22,26,23,24]  # Define pins for each servo
 
 # Initialize stepper motor pins
 GPIO.setup(STEPPER_DIR_PIN, GPIO.OUT)
 GPIO.setup(STEPPER_STEP_PIN, GPIO.OUT)
+GPIO.setup(SENSOR_PIN, GPIO.IN)
 
 # Initialize servo motors
 servo_pwms = []
@@ -57,7 +62,7 @@ def rotate_stepper(degrees, direction):
 def rotate_servo(servo_index, angle):
     duty_cycle = 2 + (angle / 18)  # Calculate duty cycle for angle
     servo_pwms[servo_index].ChangeDutyCycle(duty_cycle)
-    time.sleep(0.5)  # Hold for rotation
+    time.sleep(1)  # Hold for rotation
     servo_pwms[servo_index].ChangeDutyCycle(0)
 
 def rotate_stepper_then_servo(stepper_degrees, servo_index, servo_angle, direction="CW"):
@@ -130,7 +135,7 @@ def carbonate_test():
 
 @app.route('/spectroscopy')
 def spectroscopy_test():
-    rotate_stepper_then_servo(288, 4, 95)
+    rotate_stepper_then_servo(288, 3, 95)
     image_path = capture_image("spectroscopy_test")
     data = {
         'test_name': 'LED Spectroscopy',
@@ -172,6 +177,34 @@ def experiment():
 @app.route('/video')
 def video():
     return render_template('video.html')
+
+
+@app.route('/humidity')
+def humidity():
+    return render_template('humidity.html')
+
+@app.route('/sensor-data')
+def sensor_data():
+    # Read DHT11 sensor data
+    humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+    # Read gas sensor digital threshold
+    gas_detected = GPIO.input(GAS_SENSOR_PIN)
+
+    if humidity is not None and temperature is not None:
+        data = {
+            'temperature': temperature,
+            'humidity': humidity,
+            'gas': "Detected" if gas_detected else "Not Detected"
+        }
+    else:
+        data = {'error': 'Failed to read from DHT11 sensor'}
+
+    return jsonify(data)
+
+# Serve gas sensor page and read sensor data
+@app.route('/gas')
+def gas_test():
+    return render_template('gas.html')
 
     
 @app.route('/results')
