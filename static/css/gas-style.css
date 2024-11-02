@@ -1,0 +1,20 @@
+
+/* Style the canvas to control its size */
+#sensorChart {
+    width: 1000px; /* Set desired width */
+    height: 600px; /* Set desired height */
+}
+
+/* Center the canvas */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the content horizontally */
+    justify-content: center; /* Center the content vertically */
+    height: 100vh; /* Full viewport height */
+    margin: 0; /* Remove default margins */
+}
+
+h1 {
+    font-size: 50px;
+}

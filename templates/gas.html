@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQ8 Sensor Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        #sensorChart {
+    width: 1000px; /* Set desired width */
+    height: 600px; /* Set desired height */
+}
+
+/* Center the canvas */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the content horizontally */
+    justify-content: center; /* Center the content vertically */
+    height: 100vh; /* Full viewport height */
+    margin: 0; /* Remove default margins */
+}
+
+h1 {
+    font-size: 50px;
+    font-family: 'Orbitron';
+    color: rgb(135, 135, 255);
+    font-weight: 100;
+    letter-spacing: 8px;
+    word-spacing: 10px;
+}
+
+.line{
+    width: 70px;
+    margin: 0 auto;
+    padding: 3px;
+    text-align: center;
+    background-color: rgb(84, 14, 165);
+    border-radius: 10px;
+}
+p{
+    font-family: 'Genos', serif;
+    color: #343a40;
+    font-size: 24px;
+}
+#sensor-value{
+    margin-top: 10px;
+}
+    </style>
+ 
+    
+</head>
+<body>
+    <h1>Methane Gas sensor</h1>
+    <div class="line"></div>
+    <p>Real-time sensor data:</p>
+    <p id="sensor-value">Loading...</p>
+    
+    <canvas id="sensorChart"></canvas>
+    
+    <script>
+        const maxDataPoints = 20; // Set a limit for the number of data points
+    
+        const ctx = document.getElementById('sensorChart').getContext('2d');
+        const sensorChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [], // Holds time or index labels
+                datasets: [{
+                    label: 'Methane Gas Sensor Value',
+                    data: [], // Holds sensor values
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false,
+                }]
+            },
+            options: {
+                responsive: false, // Keep fixed size as per CSS
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    
+        function fetchSensorData() {
+            fetch('/gas')
+                .then(response => response.text())
+                .then(data => {
+                    if (data.sensor_value !== undefined) {
+                        document.getElementById('sensor-value').innerText = data.sensor_value;
+    
+                        // Update the chart
+                        const timestamp = new Date().toLocaleTimeString(); // Use a time label
+                        sensorChart.data.labels.push(timestamp); // Add new timestamp label
+                        sensorChart.data.datasets[0].data.push(data.sensor_value); // Add new sensor value
+                        
+                        // Maintain a maximum of maxDataPoints in the chart
+                        if (sensorChart.data.labels.length > maxDataPoints) {
+                            sensorChart.data.labels.shift(); // Remove oldest label
+                            sensorChart.data.datasets[0].data.shift(); // Remove oldest data point
+                        }
+    
+                        sensorChart.update(); // Refresh the chart with new data
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching sensor data:', error);
+                });
+        }
+    
+        // Fetch new sensor data every 0.5 seconds
+        setInterval(fetchSensorData, 500);
+    </script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script src="/static/websocket.js"></script>
+
+</body>
+</html>

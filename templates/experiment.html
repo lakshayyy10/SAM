@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soil Analysis Tests</title>
+    <link rel="stylesheet" href="/static/css/experiment-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Soil Analysis Tests</h1>
+        <div class="line"></div>
+        <div class="test-container">
+            <h2>Choose a Test</h2>
+            <div class="test-row">         
+                <!-- Link the following tests to video.html -->
+                <button class="test-btn" onclick="window.location.href='{{ url_for('ph_test') }}'">pH Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('texture_test') }}'">Texture and Particle Size Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('catalase_test') }}'">Catalase Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('carbonate_test') }}'">Carbonate Test</button>
+                <button class="test-btn" onclick="window.location.href='{{ url_for('spectroscopy_test') }}'">LED Spectroscopy</button>
+            </div>
+            <div class="status" id="status">Status: Awaiting Test Selection...</div>
+        </div>
+    </div>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script src="/static/websocket.js"></script>
+
+</body>
+</html>
+
