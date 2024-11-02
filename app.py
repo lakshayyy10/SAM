@@ -4,15 +4,17 @@ from flask import Flask, jsonify, render_template, Response
 from datetime import datetime
 import os
 import time
-import Adafruit_DHT
+
 
 try:
     import RPi.GPIO as GPIO
+    import Adafruit_DHT
 except ImportError as e:
     print(f"ImportError: {e}. This may indicate that the RPi.GPIO module is not installed or is being run on a non-Raspberry Pi system.")
-    from unittest import mock
+    import mock
+    from mock import Mock
     GPIO = mock.Mock()
-
+    Adafruit_DHT=mock.Mock()
 
 app = Flask(__name__)
 
@@ -29,17 +31,17 @@ cam_2 = cv2.VideoCapture(1)  # Camera 2 for live feed
 
 # GPIO Setup
 GPIO.setmode(GPIO.BCM)
-GAS_SENSOR_PIN = 3 # GPIO pin connected to MQ4 sensor's data output
+GAS_SENSOR_PIN = 3  # GPIO pin connected to MQ4 sensor's data output
 DHT_SENSOR = Adafruit_DHT.DHT11
 DHT_PIN = 4  # GPIO pin connected to DHT11 data pin
 STEPPER_DIR_PIN = 2
 STEPPER_STEP_PIN = 5
-SERVO_PINS = [22,26,23,24]  # Define pins for each servo
+SERVO_PINS = [22, 26, 23, 24]  # Define pins for each servo
 
 # Initialize stepper motor pins
 GPIO.setup(STEPPER_DIR_PIN, GPIO.OUT)
 GPIO.setup(STEPPER_STEP_PIN, GPIO.OUT)
-GPIO.setup(SENSOR_PIN, GPIO.IN)
+GPIO.setup(GAS_SENSOR_PIN, GPIO.IN)
 
 # Initialize servo motors
 servo_pwms = []
@@ -206,6 +208,9 @@ def sensor_data():
 def gas_test():
     return render_template('gas.html')
 
+@app.route('/collect_soil')
+def collect_soil():
+    return render_template('collect_soil.html')
     
 @app.route('/results')
 def results():
@@ -223,4 +228,3 @@ if __name__ == '__main__':
         app.run(debug=True)
     finally:
         GPIO.cleanup()  # Ensure GPIO pins are released after the app stops
-

@@ -17,11 +17,7 @@
         <div class="line"></div>
         <div class="test-container">
             <h2>Choose a Test</h2>
-            <div class="test-row">
-                <!-- Redirect to gas test specifically -->
-                <button class="test-btn" onclick="window.location.href='{{ url_for('gas_test') }}'">Gas Sensor Analysis</button>
-                <button class="test-btn" onclick="window.location.href='{{ url_for('humidity') }}'">Humidity Sensor Analysis</button>
-                
+            <div class="test-row">         
                 <!-- Link the following tests to video.html -->
                 <button class="test-btn" onclick="window.location.href='{{ url_for('ph_test') }}'">pH Test</button>
                 <button class="test-btn" onclick="window.location.href='{{ url_for('texture_test') }}'">Texture and Particle Size Test</button>

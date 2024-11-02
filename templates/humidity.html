@@ -6,30 +6,22 @@
     <title>DHT11 Sensor Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,700;1,900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <style>
         #sensorChart {
-            width: 1000px; /* Set desired width */
-            height: 600px; /* Set desired height */
+            width: 1000px;
+            height: 600px;
         }
 
-        /* Center the canvas */
         body {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center the content horizontally */
-            justify-content: center; /* Center the content vertically */
-            height: 100vh; /* Full viewport height */
-            margin: 0; /* Remove default margins */
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
         }
 
         h1 {
@@ -74,18 +66,18 @@
         const sensorChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: [], // To hold the time labels
+                labels: [],
                 datasets: [
                     {
                         label: 'Temperature (°C)',
-                        data: [], // To hold the temperature data
+                        data: [],
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1,
                         fill: false,
                     },
                     {
                         label: 'Humidity (%)',
-                        data: [], // To hold the humidity data
+                        data: [],
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1,
                         fill: false,
@@ -93,7 +85,7 @@
                 ]
             },
             options: {
-                responsive: false, // Disable responsive behavior
+                responsive: false,
                 scales: {
                     y: {
                         beginAtZero: true
@@ -106,26 +98,22 @@
             fetch('/sensor-data')
                 .then(response => response.json())
                 .then(data => {
-                    // Display temperature and humidity if available
                     if (data.temperature !== undefined && data.humidity !== undefined) {
-                        const temperature = data.temperature;
-                        const humidity = data.humidity;
+                        const { temperature, humidity } = data;
 
-                        // Display sensor values
                         document.getElementById('sensor-value').innerText = `Temperature: ${temperature} °C, Humidity: ${humidity} %`;
 
-                        // Update chart data
-                        const now = new Date().toLocaleTimeString(); // Current time for labels
+                        const now = new Date().toLocaleTimeString();
                         if (sensorChart.data.labels.length >= 15) {
-                            sensorChart.data.labels.shift(); // Remove the oldest label
-                            sensorChart.data.datasets[0].data.shift(); // Remove oldest temperature
-                            sensorChart.data.datasets[1].data.shift(); // Remove oldest humidity
+                            sensorChart.data.labels.shift();
+                            sensorChart.data.datasets[0].data.shift();
+                            sensorChart.data.datasets[1].data.shift();
                         }
 
-                        sensorChart.data.labels.push(now); // Add current time label
-                        sensorChart.data.datasets[0].data.push(temperature); // Add temperature data
-                        sensorChart.data.datasets[1].data.push(humidity); // Add humidity data
-                        sensorChart.update(); // Update the chart
+                        sensorChart.data.labels.push(now);
+                        sensorChart.data.datasets[0].data.push(temperature);
+                        sensorChart.data.datasets[1].data.push(humidity);
+                        sensorChart.update();
                     } else {
                         console.error('Error: No valid data received');
                     }
@@ -135,34 +123,6 @@
                 });
         }
 
-//        function fetchSensorData() {
-//           fetch('/sensor-data')
-//                .then(response => response.json())
-//                .then(data => {
-//                    if (data.sensor_value) {
-//                        const { temperature, humidity } = data.sensor_value;
-//                        document.getElementById('sensor-value').innerText = `Temperature: ${temperature} °C, Humidity: ${humidity} %`;
-
-                        // Update chart data
-//                        const now = new Date().toLocaleTimeString(); // Current time for labels
-//                        if (sensorChart.data.labels.length >= 15) {
-//                            sensorChart.data.labels.shift(); // Remove the oldest label
-//                            sensorChart.data.datasets[0].data.shift(); // Remove oldest temperature
-//                            sensorChart.data.datasets[1].data.shift(); // Remove oldest humidity
-//                        }
-
-//                        sensorChart.data.labels.push(now); // Add current time label
-//                        sensorChart.data.datasets[0].data.push(temperature); // Add temperature data
-//                        sensorChart.data.datasets[1].data.push(humidity); // Add humidity data
-//                        sensorChart.update(); // Update the chart
-//                    }
-//                })
-//                .catch(error => {
-//                    console.error('Error fetching sensor data:', error);
-//                });
-//        }
-
-        // Fetch new sensor data every second
         setInterval(fetchSensorData, 1000);
     </script>
 </body>
