@@ -23,23 +23,26 @@ if not os.path.exists(IMAGE_DIR):
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
-cam_1 = cv2.VideoCapture(0)  # Camera 1 for images
-cam_2 = cv2.VideoCapture(1)  # Camera 2 for live feed
+  # Camera 1 for images
+cam_1=cv2.VideoCapture(1)
 
 # GPIO Setup
 GPIO.setmode(GPIO.BCM)
-GAS_SENSOR_PIN = 17 # GPIO pin connected to MQ4 sensor's data output
+GAS_SENSOR_PIN = 3# GPIO pin connected to MQ4 sensor's data output
 DHT_PIN = 4  # GPIO pin connected to DHT11 data pin
 sensor = dht11.DHT11(pin=DHT_PIN)
 
 STEPPER_DIR_PIN = 2
 STEPPER_STEP_PIN = 5
-SERVO_PINS = [22, 26, 23, 24,25]  # Define pins for each servo
+SERVO_PINS = [22, 26, 23, 24,12]
+relay_pin=8# Define pins for each servo
 
 # Initialize stepper motor pins
 GPIO.setup(STEPPER_DIR_PIN, GPIO.OUT)
 GPIO.setup(STEPPER_STEP_PIN, GPIO.OUT)
 GPIO.setup(GAS_SENSOR_PIN, GPIO.IN)
+GPIO.setup(relay_pin,GPIO.OUT)
+
 
 # Initialize servo motors
 servo_pwms = []
@@ -73,6 +76,14 @@ def rotate_servo(servo_index, angle):
     servo_pwms[servo_index].ChangeDutyCycle(duty_cycle)
     time.sleep(1)  # Hold for rotation
     servo_pwms[servo_index].ChangeDutyCycle(0)
+def rotate_dc():
+        GPIO.output(relay_pin, GPIO.LOW)
+        time.sleep(5)
+        GPIO.output(relay_pin, GPIO.HIGH)
+def uv_light():
+    GPIO.output(relay_pin, GPIO.LOW)  # Relay is usually active l
+    time.sleep(120)
+    GPIO.output(relay_pin, GPIO.HIGH)
 
 def rotate_stepper_then_servo(stepper_degrees, servo_index, servo_angle):
     rotate_stepper(stepper_degrees)  # Rotate stepper motor
@@ -96,6 +107,8 @@ def save_test_data(test_name, data):
 # Routes for each test
 @app.route('/ph')
 def ph_test():
+    rotate_dc()
+    time.sleep(2)
     rotate_stepper_then_servo(0, 0, 95)  # Stepper movement then servo rotationi
     rotate_servo(4,170)
     time.sleep(4)
@@ -107,11 +120,16 @@ def ph_test():
         'image_path': image_path
     }
     save_test_data("ph_test", data)
-    return render_template('video.html', test_name='pH Test', data=data)
+    return render_template('video.html', test_name='pH Test', data=data,video_feed=video_feed())
 
 @app.route('/texture')
 def texture_test():
+    rotate_dc()
+    time.sleep(2)
     rotate_stepper_then_servo(72, 1, 95)
+    rotate_servo(4,170)
+    time.sleep(4)
+    rotate_servo(4,2)
     image_path = capture_image("texture_test")
     data = {
         'test_name': 'Texture',
@@ -123,7 +141,12 @@ def texture_test():
 
 @app.route('/catalase')
 def catalase_test():
+    rotate_dc()
+    time.sleep(2)
     rotate_stepper_then_servo(144, 2, 95)
+    rotate_servo(4,170)
+    time.sleep(4)
+    rotate_servo(4,2)
     image_path = capture_image("catalase_test")
     data = {
         'test_name': 'Catalase',
@@ -135,7 +158,12 @@ def catalase_test():
 
 @app.route('/carbonate')
 def carbonate_test():
+    rotate_dc()
+    time.sleep(2)
     rotate_stepper_then_servo(216, 3, 95)
+    rotate_servo(4,170)
+    time.sleep(4)
+    rotate_servo(4,2)
     image_path = capture_image("carbonate_test")
     data = {
         'test_name': 'Carbonate',
@@ -147,7 +175,12 @@ def carbonate_test():
 
 @app.route('/spectroscopy')
 def spectroscopy_test():
+    rotate_dc()
+    time.sleep(2)
     rotate_stepper_then_servo(288, 3, 95)
+    rotate_servo(4,170)
+    time.sleep(4)
+    rotate_servo(4,2)
     image_path = capture_image("spectroscopy_test")
     data = {
         'test_name': 'LED Spectroscopy',
@@ -159,8 +192,9 @@ def spectroscopy_test():
 
 # Route for live camera feed (Camera 2)
 def gen():
+    
     while True:
-        success, frame = cam_2.read()
+        success, frame = cam_1.read()
         if not success:
             break
         else:
@@ -190,13 +224,31 @@ def experiment():
 def video():
     return render_template('video.html')
 
-
 @app.route('/humidity')
 def humidity():
     # Read DHT11 sensor data
-    result= sensor.read()
+    result = sensor.read()
     
+    if result.is_valid():
+        sensor_data = {
+            'temperature': result.temperature,
+            'humidity': result.humidity
+        }
+    else:
+        sensor_data = {
+            'error': 'Failed to read from DHT11 sensor',
+            'temperature': None,
+            'humidity': None
+        }
+    
+    # Render the template and pass sensor_data
+    return render_template('humidity.html', sensor_data=sensor_data)
 
+@app.route('/humidity/data')
+def humidity_data():
+    # This route returns just the sensor data as JSON
+    result = sensor.read()
+    
     if result.is_valid():
         sensor_data = {
             'temperature': result.temperature,
@@ -209,7 +261,8 @@ def humidity():
             'humidity': None
         }
 
-    return render_template('humidity.html', sensor_data=sensor_data)
+    return jsonify(sensor_data)
+
 
 @app.route('/gas')
 def gas():
@@ -225,8 +278,26 @@ def gas():
             'error': 'Failed to read from gas sensor',
             'gas': None
         }
-
+    
+    # Render the template and pass gas_data
     return render_template('gas.html', gas_data=gas_data)
+
+@app.route('/gas/data')
+def gas_data():
+    # This route returns just the gas detection status as JSON
+    gas_detected = GPIO.input(GAS_SENSOR_PIN)
+
+    if gas_detected is not None:
+        gas_data = {
+            'gas': "Detected" if gas_detected else "Not Detected"
+        }
+    else:
+        gas_data = {
+            'error': 'Failed to read from gas sensor',
+            'gas': None
+        }
+
+    return jsonify(gas_data) 
 
 @app.route('/collect_soil')
 def collect_soil():

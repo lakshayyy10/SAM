@@ -95,8 +95,8 @@
         });
 
         function fetchSensorData() {
-            fetch('/humidity')
-                .then(response => response.text())
+            fetch('/humidity/data')  // Fetch data from the new endpoint
+                .then(response => response.json())
                 .then(data => {
                     if (data.temperature !== undefined && data.humidity !== undefined) {
                         const { temperature, humidity } = data;
@@ -126,7 +126,8 @@
         setInterval(fetchSensorData, 1000);
     </script>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-<script src="/static/websocket.js"></script>
+    <script src="/static/websocket.js"></script>
 
 </body>
 </html>
+

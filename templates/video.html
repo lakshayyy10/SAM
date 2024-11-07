@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dual Camera Feeds</title>
+    <title>Single Camera Feed</title>
     <style>
         /* Styling the container */
         .container {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
             margin-top: 20px;
         }
 
@@ -52,26 +51,33 @@
     </style>
 </head>
 <body>
-    <h1>Dual Camera Feeds</h1>
+    <h1>Single Camera Feed</h1>
     <div class="line"></div>
 
     <div class="container">
-        <!-- First camera feed -->
         <div class="video-box">
-            <h3>Camera Feed 1</h3>
-            <img src="{{ url_for('video_feed') }}" alt="Camera 1 Feed">
-        </div>
-
-        <!-- Second camera feed -->
-        <div class="video-box">
-            <h3>Camera Feed 2</h3>
-            <img src="{{ url_for('video_feed') }}" alt="Camera 2 Feed">
+            <h3>Camera Feed</h3>
+            <img id="camera-feed" alt="Camera Feed">
         </div>
     </div>
 
-    <button onclick="captureImage()">Capture Image from Camera 1</button>
+    <button onclick="captureImage()">Capture Image from Camera</button>
 
     <script>
+        const cameraFeed = document.getElementById('camera-feed');
+
+        function updateFrame() {
+            fetch('/video_feed')
+                .then(response => response.blob())
+                .then(blob => {
+                    cameraFeed.src = URL.createObjectURL(blob);
+                    setTimeout(updateFrame, 30); // Adjust for desired FPS
+                })
+                .catch(error => console.error('Error fetching frame:', error));
+        }
+
+        updateFrame();
+
         function captureImage() {
             fetch('/capture_image')
                 .then(response => response.json())
@@ -83,12 +89,12 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Error capturing image:', error);
                 });
         }
     </script>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-<script src="/static/websocket.js"></script>
+    <script src="/static/websocket.js"></script>
 
 </body>
 </html>

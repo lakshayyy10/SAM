@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 # Pin setup
-relay_pin = 4 # GPIO pin connected to Relay 4
+relay_pin = 8# GPIO pin connected to Relay 4
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)  # Use BCM pin-numbering

@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 # Setup
-relay_pin = 4  # GPIO pin connected to the relay
+relay_pin = 8 # GPIO pin connected to the relay
 
 GPIO.setmode(GPIO.BCM)  # Use Broadcom pin-numbering scheme
 GPIO.setup(relay_pin, GPIO.OUT)  # Set the relay pin as output

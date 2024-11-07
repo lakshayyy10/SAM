@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Results</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            font-size: 50px;
+            font-family: 'Orbitron';
+            color: rgb(135, 135, 255);
+            font-weight: 100;
+            letter-spacing: 8px;
+            word-spacing: 10px;
+        }
+
+        .result-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        p {
+            font-family: 'Genos', serif;
+            color: #343a40;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .line {
+            width: 70px;
+            height: 5px;
+            background-color: rgb(84, 14, 165);
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sensor Results</h1>
+    <div class="line"></div>
+    <div class="result-container">
+        <h2>Humidity Sensor Data</h2>
+        <p id="humidity-result">Loading...</p>
+        
+        <h2>Gas Sensor Data</h2>
+        <p id="gas-result">Loading...</p>
+    </div>
+
+    <script>
+        function fetchResults() {
+            // Fetch humidity data
+            fetch('/humidity/data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('humidity-result').innerHTML = `<span class="error">${data.error}</span>`;
+                    } else {
+                        document.getElementById('humidity-result').innerText = `Temperature: ${data.temperature} °C, Humidity: ${data.humidity} %`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('humidity-result').innerHTML = `<span class="error">Error fetching humidity data: ${error.message}</span>`;
+                });
+
+            // Fetch gas data
+            fetch('/gas/data')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('gas-result').innerHTML = `<span class="error">${data.error}</span>`;
+                    } else {
+                        document.getElementById('gas-result').innerText = `Gas Status: ${data.gas}`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('gas-result').innerHTML = `<span class="error">Error fetching gas data: ${error.message}</span>`;
+                });
+        }
+
+        // Fetch results when the page loads
+        fetchResults();
+    </script>
+     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script src="/static/websocket.js"></script>
+
+</body>
+</html>
+

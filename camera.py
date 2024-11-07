@@ -1,6 +1,6 @@
 import cv2
 
-cap = cv2.VideoCapture(0)  # Using index 2, since the device is /dev/video2
+cap = cv2.VideoCapture(1)  # Using index 2, since the device is /dev/video2
 
 if not cap.isOpened():
     print("Error: Could not open Pi Camera on /dev/video0`.")

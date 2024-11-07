@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 # Setup
-servo_pin = 22 # Define the GPIO pin where the servo is connected
+servo_pin = 12 # Define the GPIO pin where the servo is connected
 GPIO.setmode(GPIO.BCM)  # Use Broadcom pin-numbering scheme
 GPIO.setup(servo_pin, GPIO.OUT)  # Set the servo pin as an output
 
