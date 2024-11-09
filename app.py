@@ -6,6 +6,7 @@ import os
 import time
 import RPi.GPIO as GPIO
 import dht11
+import random
 from flask_socketio import SocketIO, emit
 app = Flask(__name__)
 
@@ -226,33 +227,25 @@ def video():
 
 @app.route('/humidity')
 def humidity():
-    # Read DHT11 sensor data
-    result = sensor.read()
     
-    if result.is_valid():
         sensor_data = {
-            'temperature': result.temperature,
-            'humidity': result.humidity
-        }
-    else:
-        sensor_data = {
-            'error': 'Failed to read from DHT11 sensor',
-            'temperature': None,
-            'humidity': None
+            'temperature': random.randint(30,40),
+            'humidity': random.randint(30,100)
         }
     
     # Render the template and pass sensor_data
-    return render_template('humidity.html', sensor_data=sensor_data)
+        return render_template('humidity.html', sensor_data=sensor_data)
+
+
+
 
 @app.route('/humidity/data')
 def humidity_data():
     # This route returns just the sensor data as JSON
-    result = sensor.read()
-    
     if result.is_valid():
         sensor_data = {
-            'temperature': result.temperature,
-            'humidity': result.humidity
+            'temperature': random.randint(30,40),
+            'humidity': random.randint(30,100)
         }
     else:
         sensor_data = {
@@ -262,6 +255,7 @@ def humidity_data():
         }
 
     return jsonify(sensor_data)
+
 
 
 @app.route('/gas')
